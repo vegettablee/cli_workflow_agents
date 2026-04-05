@@ -48,7 +48,7 @@ class SessionState:
         }
     """
 
-    CACHE_FILE = Path.home() / ".email_session.json"
+    CACHE_FILE = Path("MCPServer/email_session.json")
 
     def __init__(self):
         """Initialize session state and load from cache if available."""
@@ -85,13 +85,25 @@ class SessionState:
                     'to': 'recruiter@company.com',
                     'subject': 'Interest in Backend Role',
                     'body': 'Dear ...',
-                    'resume': 'path/to/resume.pdf'
+                    'resume_path': 'path/to/resume.pdf',
+                    'resume_type': 'Backend',
+                    'raw_html': ''
                 }
 
         Returns:
             True if successfully added, False otherwise
         """
-        pass
+        try:
+            email_key = draft.get('to')
+            if not email_key:
+                print("Error: Draft missing 'to' field")
+                return False
+
+            self.drafts[email_key] = draft
+            return True
+        except Exception as e:
+            print(f"Error adding draft: {str(e)}")
+            return False
 
     @auto_save
     def remove_draft(self, email: str) -> bool:
@@ -117,7 +129,18 @@ class SessionState:
         Returns:
             True if successfully moved, False otherwise
         """
-        pass
+        try:
+            if email not in self.drafts:
+                print(f"Error: Email '{email}' not found in drafts")
+                return False
+
+            # Move from drafts to review
+            self.review[email] = self.drafts[email]
+            del self.drafts[email]
+            return True
+        except Exception as e:
+            print(f"Error moving to review: {str(e)}")
+            return False
 
     @auto_save
     def move_to_queue(self, email: str) -> bool:

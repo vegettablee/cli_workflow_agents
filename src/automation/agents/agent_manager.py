@@ -1,6 +1,6 @@
 from pydantic_ai import Agent
 from pydantic_ai.models.gemini import GeminiModel
-from .pydantic_models import ResumeSelection
+from .pydantic_models import ResumeSelection, EmailDraft
 
 
 class AgentManager:
@@ -29,7 +29,8 @@ class AgentManager:
         if self._email_personalization_agent is None:
             self._email_personalization_agent = Agent(
                 model=self.model,
-                system_prompt='',
+                output_type=EmailDraft,
+                system_prompt='You are a cold email personalization assistant. Your task is to craft personalized, professional cold emails for internship opportunities that maximize response rates while maintaining authenticity and showcasing relevant experience.',
                 tools=[]
             )
         return self._email_personalization_agent

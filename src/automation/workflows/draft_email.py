@@ -16,6 +16,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from typing import Dict, List, Tuple
 from db.connection import get_session
 from db.queries import find_valid_emails, get_company, get_recruiter, get_recruiter_email
+from src.automation.agents.email_personalization import run_draft_agent
+from src.automation.agents.resume_selection import run_resume_selection_agent
 
 
 class DraftEmailWorkflow:
@@ -94,9 +96,12 @@ class DraftEmailWorkflow:
             company_id: The company ID to query
 
         Returns:
-            Dictionary with the same fields as the COMPANY entity in the DDL script
+            Dictionary with the same fields as the COMPANY entity in the DDL script plus the email
         """
-        return get_company(session, company_id)
+        company_context = get_company(session, company_id)
+        # Add the email address to the context
+        company_context['email'] = company_email
+        return company_context
 
     @staticmethod
     def get_recruiter_context(session, recruiter_email: str) -> Dict:
@@ -122,27 +127,59 @@ class DraftEmailWorkflow:
         return get_recruiter(session, recruiter_id)
 
     @staticmethod
-    def draft_email(context: Dict, is_recruiter: bool) -> Dict:
+    def process_and_add_to_session(
+        context: Dict,
+        resume_selector_agent: any,
+        email_personalization_agent: any,
+        session_state: any,
+        is_recruiter: bool
+    ) -> Tuple[bool, Dict]:
         """
-        Draft a personalized email using AI agent.
+        Process a single email: select resume and draft email.
 
-        Leave this blank for now until the logic is decided for the agent.
+        This method encapsulates the workflow for a single email:
+        1. Select appropriate resume based on context
+        2. Generate personalized email draft
 
         Args:
             context: Context dictionary containing company/recruiter information
+            resume_selector_agent: Agent for selecting resume type
+            email_personalization_agent: Agent for generating personalized emails
+            session_state: SessionState instance (unused, for consistency)
             is_recruiter: True if drafting for recruiter, False if for company
 
         Returns:
-            Dictionary containing the drafted email details
-
-        Note:
-            - Run a SQL query that uses company_id and pulls relevant company description
-              fields for context (implement in queries.py and call here)
-            - If is_recruiter is True, run email personalization agent for recruiter emails
-            - If is_recruiter is False, run email personalization agent for company emails
+            Tuple of (success: bool, email_dict: Dict or None)
+            - success: True if the workflow completed successfully
+            - email_dict: The generated email dictionary if successful, None otherwise
         """
-        # TODO: Implement email drafting logic with AI agent
-        pass
+        try:
+            # Step 1: Select appropriate resume
+            success, selected_resume = run_resume_selection_agent(
+                context=context,
+                agent=resume_selector_agent,
+                is_recruiter=is_recruiter
+            )
+
+            if not success:
+                return (False, None)
+
+            # Step 2: Generate personalized email draft
+            draft_success, email_dict = run_draft_agent(
+                context=context,
+                agent=email_personalization_agent,
+                resume_type=selected_resume,
+                is_recruiter=is_recruiter
+            )
+
+            if not draft_success:
+                return (False, None)
+
+            return (True, email_dict)
+
+        except Exception as e:
+            print(f"Error in process_and_add_to_session: {str(e)}")
+            return (False, None)
 
     def run(self, count: int = None) -> Dict:
         """

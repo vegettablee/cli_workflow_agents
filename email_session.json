@@ -1,5 +1,14 @@
-{ 
-  "drafts" : "",
-  "reviewed" : "", 
-  "queued" : ""
+{
+  "drafts": {},
+  "review": {
+    "careers@motivitylabs.com": {
+      "to": "careers@motivitylabs.com",
+      "subject": "AI Engineer Internship Interest - Preston Rank",
+      "body": "Dear Motivity Labs Team,\n\nMy name is Preston Rank, and I'm a Computer Science Junior at the University of Texas at Dallas, graduating in December 2027. I'm reaching out because I'm genuinely impressed by Motivity Labs' focus on 'Innovation as a Service,' particularly your work with cloud-native architectures and generative AI.\n\nAs an aspiring AI Engineer, my experience aligns well with your commitment to cutting-edge technology. I'm keen to apply my skills in AI development to real-world projects, especially those involving generative AI, and believe I could make a valuable contribution to your team.\n\nI am very interested in exploring potential internship opportunities at Motivity Labs Inc. and would appreciate the chance to learn more about how I could contribute. My resume, detailing my AI engineering experience, is attached for your review.\n\nThank you for your time and consideration.\n\nSincerely,\nPreston Rank",
+      "raw_html": "",
+      "resume_path": "./src/resumes/ai_engineer.pdf",
+      "resume_type": "AI Engineer"
+    }
+  },
+  "queued": {}
 }

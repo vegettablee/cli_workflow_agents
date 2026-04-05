@@ -1,1 +1,16 @@
-// specifically used to help configure parameters for rate limiting and other features
+{
+      "GOOGLE_API_LIMIT_PER_HOUR" : 10, 
+      "email_style": {
+        "tone": "professional-casual",
+        "max_length_words": 150
+      }, 
+      "current_template_id" : "",
+      "Name" : "Preston Rank",
+      "school" : "University of Texas at Dallas",
+      "year" : "Junior",
+      "major" : "Computer Science",
+      "expected_grad" : "Dec 2027", 
+      "resume_profiles": {
+        "fullstack": "MCPServer/src/resumes/fullstack.pdf"
+      }
+}

@@ -7,7 +7,6 @@ from datetime import date
 
 Base = declarative_base()
 
-
 class Company(Base):
     __tablename__ = 'companies'
 

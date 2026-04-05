@@ -49,7 +49,6 @@ Personalized Automation Email Generation Workflow:
 Tech Stack: 
 - SQLite
 - Python
-- Claude MCP
 
 # Backend Architecture 
 
@@ -97,7 +96,6 @@ Application flow per command:
 1. commands.py takes the user input and parses it and routes it to the correct command handler.
 2. this command handler calls a method in the orchestrator class which has all of the separate workflows that can be used, and within these workflows, contains the calling of agents to complete a higher-level task(like for a drafting a cold email workflow)
 
-
 Overview: This goes over the high-level documentation for how the Gmail API integration integration and Gmail workflow management for sending cold personalized emails to companies. 
 
 Scope: This scope is focused on a hybrid approach, not full automation, because it will include a phase where I will personally need to review it to see what needs improvement. The main focus for this section is to incorporate(in order): 
@@ -132,4 +130,3 @@ Orchestration layer data flow in more detail:
 - Call agents with prepared context
 - Update session state
 - Handle workflow-specific errors
-

@@ -37,9 +37,34 @@ Orchestrator class:
   - right now, the orchestrator is intializing the agent manager class, which contains the the agents/tools that can be run, and 
     are passed down to run_draft_agent inside of /agents/email_personalization.py
   
-email_personalization.py: this file handles formatting context into a prompt, possibly retrieving relevant resumes, and running the actual API call in order to select which type of resume is most relevant based on the company decscription 
-- function: run_draft_agent(context, agent, is_recruiter)
-- - NEEDS COMPLETION
+email_personalization.py: this file is specifically for handling the generation of a personalized email given context, includes multiple helper functions, and can handle both non-recruiters and recruiters 
+
+
+def run_draft_agent(context : dict, agent : any, resume_type : str, is_recruiter : bool) -> dict: 
+          Does: Runs the actual draft agent to generate the personalized email, based on the type of the resume, right to the right path, 
+                - all of the resumes are inside of src/resumes, and the first path will be src/resumes/fullstack.pdf 
+                - it makes sense to just have this function responsible for making sure the paths are right without bloating the generate_instructions function
+                - runs generate_instructions, passing down context and if it is a recruiter 
+          Given: context is a dict that contains the company and personal context(name, year, grad date), if is_recruiter is true,
+                  - then, context includes recruiter context as well. these are modeled directly after SQLAlchemy models in models.py, with the exception of the personal context
+                  - agent is an agent lazy initialized from agent_manager.py
+                  - resume_type is one of four types, for now it defaults to "fullstack" for the sake of MVP 
+          
+          Returns: returns a dict of necessary fields of an email that can be supplemented directly in an Gmail API call for formatting later, this dict contains 
+                  - contains three keys mapped to strings: to, subject, body 
+          Errors: For now, add a placeholder where a logging system using python's module would be placed, but leave it blank
+                  - print the error 
+
+def generate_instructions(context : dict, resume_type : str, is_recruiter : bool) -> dict: 
+          """
+          Does: generates the valid fields in order to be reviewed later, and can be sent later via GMAIL api 
+          Given: context passed down from run_draft_agent 
+          Returns: a dict of necessary fields of an email that can be supplemented directly in an Gmail API call for formatting later, this dict contains 
+                  - contains three keys mapped to strings: to, subject, body 
+          Errors: For now, add a placeholder where a logging system using python's module would be placed, but leave it blank 
+                  - print the error 
+
+
 
 
 
