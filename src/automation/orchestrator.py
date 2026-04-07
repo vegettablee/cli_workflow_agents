@@ -63,6 +63,28 @@ class OrchestrationLayer:
     """
     pass
 
+  def _filter_reviewed_emails(self, emails: List[str], email_ids: List[int]) -> tuple:
+    """
+    Filter out emails that already exist in the review section to avoid redrafting.
+
+    Args:
+      emails: List of email addresses to check
+      email_ids: List of corresponding company IDs
+
+    Returns:
+      Tuple of (filtered_emails, filtered_ids) with reviewed emails removed
+    """
+    reviewed_emails = set(self.session.review.keys())
+    filtered_emails = []
+    filtered_ids = []
+
+    for email, email_id in zip(emails, email_ids):
+      if email not in reviewed_emails:
+        filtered_emails.append(email)
+        filtered_ids.append(email_id)
+
+    return filtered_emails, filtered_ids
+
   def run_draft_email_workflow(self, email_count : int):
     display_workflow_header("Draft Email Workflow", email_count)
 
@@ -73,9 +95,9 @@ class OrchestrationLayer:
       recruiter_emails = all_emails[2]
       recruiter_email_company_ids = all_emails[3]
 
-      # run a loop to check if the company_emails exist within email_session.json in the review portion
-      # run a loop to check if the recruiter_emails exist within email_session.json in the review portion 
-      # only keep emails that are not in the email_session.json 
+      # Filter out emails already in review to avoid redrafting
+      company_emails, company_email_ids = self._filter_reviewed_emails(company_emails, company_email_ids)
+      recruiter_emails, recruiter_email_company_ids = self._filter_reviewed_emails(recruiter_emails, recruiter_email_company_ids)
 
       num_to_draft = min(len(recruiter_emails) + len(company_emails), email_count)
       print(f"Found {len(company_emails)} company emails and {len(recruiter_emails)} recruiter emails")

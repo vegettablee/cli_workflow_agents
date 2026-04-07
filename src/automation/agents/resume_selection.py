@@ -1,10 +1,9 @@
 # handles agent workflows related to resume selection based on company information
 # this agent is responsible for choosing the most appropriate resume type given company context
 
-from typing import Dict, Tuple, Optional
-
-resume_options = ['Backend', 'Fullstack', 'AI Engineer', 'Solutions', 'Machine Learning']
-resume_options_real = ['Backend', 'Fullstack', 'AI Engineer', 'Solutions', 'Machine Learning'] # default to fullstack for now, needs to be wired with the actual drafting agent 
+from typing import Dict, Tuple, Optional, List
+import json
+import os 
 
 def run_resume_selection_agent(context: dict, agent: any, is_recruiter: bool) -> Tuple[bool, Optional[str]]:
     """
@@ -63,6 +62,13 @@ def generate_instruction_prompt(context: dict, is_recruiter: bool) -> str:
     company_category = context.get('category', 'N/A')
     company_location = f"{context.get('company_city', '')}, {context.get('company_state', '')}".strip(', ')
 
+    # Get available resume options from config
+    resume_options = retrieve_resume_options()
+
+    # Get list of available resume types from the resume_options dict
+    resume_types = list(resume_options.keys())
+    resume_types_str = ', '.join(resume_types)
+
     # Build the prompt - for now, treat recruiter and company contexts the same
     # (as noted in original comments, recruiter-specific handling may be added later if LinkedIn context is useful)
     prompt = f"""You are selecting the most appropriate resume type for a cold email to a company.
@@ -71,7 +77,7 @@ def generate_instruction_prompt(context: dict, is_recruiter: bool) -> str:
 {personal_context}
 
 # Available Resume Types
-{', '.join(resume_options)}
+{resume_types_str}
 
 # Company Information
 - Company Name: {company_name}
@@ -87,15 +93,17 @@ Based on the company information and your background, select the single most app
 3. Maximizes your chances of getting a response
 
 # Guidelines for Selection
-- If company information is limited or unclear, choose a generally safe option (e.g., 'Fullstack' or 'Backend')
+- If company information is limited or unclear, choose a generally safe option (e.g., 'fullstack')
 - Consider the company's category and size when making your decision
 - Match the resume type to what the company likely needs based on their description
+- You MUST choose from the available resume options: {resume_types_str}
 
 # Output Format
 Provide your response in the following JSON format:
 {{
-    "resume_type": "One of: Backend, Fullstack, AI Engineer, Solutions, Machine Learning",
-    "reasoning": "Brief 1-sentence explanation for your choice"
+    "resume_type": "One of: {resume_types_str}",
+    "reasoning": "Brief 1-sentence explanation for your choice",
+    "current_resume_options": "{resume_types_str}"
 }}
 """
 
@@ -130,5 +138,50 @@ University of Texas at Dallas, Computer Science, Expected Graduation: 2027
 - **Skill Swap Social Media App**: Led system design for a React Native/Spring Boot/MongoDB social media platform enabling users to exchange skills through video sharing and messaging.
 - **Thrift Store Discovery App**: Full-stack app that helps discover thrift stores based on style, inventory type, and community focus. Built Node.js/Express backend that uses GPT-4 to categorize stores from Google Places API, with iOS/MapKit frontend for browsing.
 """
-
     return context  
+
+def retrieve_resume_options() -> Dict[str, str]:
+    """
+    Retrieves available resume types and their paths from config.json.
+    Only returns resumes where the file actually exists at the specified path.
+
+    Returns:
+        Dictionary mapping resume type names to their file paths
+        Example: {'fullstack': 'MCPServer/src/resumes/fullstack.pdf', 'solutions': 'MCPServer/src/resumes/solutions.pdf'}
+        Returns empty dict if config.json cannot be read or no valid resumes exist
+    """
+    try:
+        # Get the project root directory (assumes this file is in src/automation/agents/)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.join(current_dir, '../../..')
+        project_root = os.path.abspath(project_root)
+        config_path = os.path.join(project_root, 'config.json')
+
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+
+        resume_profiles = config.get('resume_profiles', {})
+        valid_resumes = {}
+
+        for resume_type, resume_path in resume_profiles.items():
+            # Handle paths that start with 'MCPServer/' by stripping it
+            # since project_root already points to MCPServer directory
+            if resume_path.startswith('MCPServer/'):
+                resume_path_normalized = resume_path[len('MCPServer/'):]
+            else:
+                resume_path_normalized = resume_path
+
+            # Build absolute path from project root to check if file exists
+            full_path = os.path.join(project_root, resume_path_normalized)
+
+            if os.path.isfile(full_path):
+                # Store the resume type with its original path from config
+                valid_resumes[resume_type] = resume_path
+            else:
+                print(f"Warning: Resume file not found for '{resume_type}' at path: {resume_path}")
+
+        return valid_resumes
+
+    except Exception as e:
+        print(f"Error reading resume options from config.json: {str(e)}")
+        return {} 

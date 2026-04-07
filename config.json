@@ -4,13 +4,14 @@
         "tone": "professional-casual",
         "max_length_words": 150
       }, 
-      "current_template_id" : "",
+      "current_template_id" : "1",
       "Name" : "Preston Rank",
       "school" : "University of Texas at Dallas",
       "year" : "Junior",
       "major" : "Computer Science",
       "expected_grad" : "Dec 2027", 
       "resume_profiles": {
-        "fullstack": "MCPServer/src/resumes/fullstack.pdf"
+        "fullstack": "MCPServer/src/resumes/fullstack.pdf",
+        "solutions" : "MCPServer/src/resumes/solutions.pdf"
       }
 }
