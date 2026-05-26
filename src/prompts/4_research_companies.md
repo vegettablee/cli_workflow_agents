@@ -1,15 +1,6 @@
 TARGET COMPANIES (5-10):
-1. Caris Life Sciences | https://www.carislifesciences.com
-
-2. Wellfit Technologies | https://www.wellfit.com
-
-3. datatruck | https://www.datatruck.io
-
-4. Steer Health | https://www.steerhealth.io
-
-5. MicroAI | https://www.micro.ai
-
-6. Yendo | https://www.yendo.com
+1. 
+2. 
 ...
 
 ---

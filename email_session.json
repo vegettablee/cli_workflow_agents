@@ -3,51 +3,11 @@
   "review": {
     "careers@motivitylabs.com": {
       "to": "careers@motivitylabs.com",
-      "subject": "Inquiry: AI Engineering Internship at Motivity Labs",
-      "body": "Hi Motivity Labs Team,\n\nMy name is Preston Rank, and I'm a Computer Science junior at the University of Texas at Dallas (graduating Dec 2027). I'm reaching out about potential internship opportunities.\n\nI've been following Motivity Labs' impressive work in \"Innovation as a Service,\" especially your focus on cloud-native architectures and generative AI. As an aspiring AI Engineer, I'm incredibly excited by how my background aligns with your initiatives. I believe my skills in AI and computer science could be a valuable asset to your team, contributing to your cutting-edge projects.\n\nI'm eager to learn more about how I could contribute to your work this summer. Please find my resume attached for your review.\n\nThank you for your time and consideration.\n\nBest regards,\n\nPreston Rank\nUniversity of Texas at Dallas\n(Expected Graduation: Dec 2027)",
-      "raw_html": "",
-      "resume_path": "./src/resumes/ai_engineer.pdf",
-      "resume_type": "AI Engineer"
-    },
-    "info@motivitylabs.com": {
-      "to": "info@motivitylabs.com",
-      "subject": "Quick question about AI internships at Motivity Labs",
-      "body": "Hi Motivity Labs Team,\n\nMy name is Preston Rank, a Computer Science Junior at the University of Texas at Dallas (Dec 2027), and I'm reaching out about potential AI Engineer internship opportunities.\n\nI've been truly impressed by Motivity Labs' 'Innovation as a Service' approach, especially your work in cloud-native architectures and generative AI. My passion lies in AI engineering, and I believe my background would align well with your full-lifecycle product engineering projects.\n\nI am eager to contribute to innovative solutions and learn from your team. I've attached my resume for your review and would appreciate the chance to discuss how I could add value.\n\nThank you for your time.\n\nBest regards,\n\nPreston Rank\nUniversity of Texas at Dallas\nComputer Science, Junior\nExpected Graduation: Dec 2027",
-      "raw_html": "",
-      "resume_path": "./src/resumes/ai_engineer.pdf",
-      "resume_type": "AI Engineer"
-    },
-    "Wellfitpr@piercom.com": {
-      "to": "Wellfitpr@piercom.com",
-      "subject": "Internship Inquiry: Preston Rank - Wellfit",
-      "body": "Hi Wellfit Technologies Team,\n\nMy name is Preston Rank, a Computer Science Junior at the University of Texas at Dallas, graduating in December 2027. I'm writing to express my strong interest in internship opportunities at Wellfit.\n\nI've been following Wellfit's innovative work in simplifying patient financing and payment processes within Healthtech. My Fullstack development experience aligns well with the technical challenges of building and enhancing platforms like yours, and I believe I could contribute meaningfully.\n\nI'm genuinely excited by the prospect of gaining hands-on experience at a dynamic company like Wellfit. My resume, highlighting relevant projects, is attached for your review.\n\nThank you for your time and consideration.\n\nBest regards,\nPreston Rank",
+      "subject": "Internship Inquiry: Fullstack Development - Preston Rank",
+      "body": "Hi Motivity Labs Team,\n\nMy name is Preston Rank, a Computer Science Junior at the University of Texas at Dallas, graduating Dec 2027. I'm incredibly impressed by Motivity Labs' approach to 'Innovation as a Service,' especially your focus on cloud-native architectures and full-lifecycle product engineering.\n\nI'm reaching out about potential internship opportunities. My Fullstack development experience, which includes building and deploying robust applications, strongly aligns with your work. I'm keen to apply my skills and learn from your team in a real-world setting, particularly given your strong presence in Irving.\n\nMy resume is attached for your review. I'm eager to discuss how I can contribute.\n\nThank you for your time.\n\nBest regards,\n\nPreston Rank\nUniversity of Texas at Dallas",
       "raw_html": "",
       "resume_path": "./src/resumes/fullstack.pdf",
       "resume_type": "Fullstack"
-    },
-    "hello@steerhealth.ai": {
-      "to": "hello@steerhealth.ai",
-      "subject": "Quick Question: AI Engineer Internship at Steer Health?",
-      "body": "Hi Steer Health Team,\n\nMy name is Preston Rank, and I'm a Computer Science junior at the University of Texas at Dallas, graduating in Dec 2027. I'm reaching out because I've been really impressed with Steer Health's AI-powered platform for enhancing patient engagement and streamlining healthcare operations.\n\nAs an aspiring AI Engineer, I'm particularly interested in how your work leverages AI in the healthcare SaaS space. My background aligns well with developing intelligent solutions, and I believe my skills could contribute to your innovative approach.\n\nI'd love to learn more about any potential AI Engineer internship opportunities at Steer Health and how I might be able to contribute to your mission in Irving, TX.\n\nWould you be open to a brief chat, or perhaps could you point me towards the best person to discuss this? I've attached my resume for your review.\n\nThank you for your time and consideration.\n\nBest regards,\nPreston Rank",
-      "raw_html": "",
-      "resume_path": "./src/resumes/ai_engineer.pdf",
-      "resume_type": "AI Engineer"
-    },
-    "privacy@steerhealth.io": {
-      "to": "privacy@steerhealth.io",
-      "subject": "Quick question: Internship opportunities at Steer Health?",
-      "body": "Hi,\n\nMy name is Preston Rank, a Junior Computer Science student at the University of Texas at Dallas (graduating Dec 2027). I'm reaching out about fullstack internship opportunities at Steer Health.\n\nI've been genuinely impressed by Steer Health's innovative AI platform, enhancing patient engagement and streamlining healthcare operations. My fullstack development experience, focused on building robust and user-friendly applications, directly aligns with the impactful work you do as a fast-growing Healthcare AI/SaaS startup. I'm eager to contribute my skills to your team.\n\nMy fullstack resume is attached for your review, and I'd welcome the chance to discuss how I can add value.\n\nThank you for your time.\n\nBest regards,\n\nPreston Rank\nUniversity of Texas at Dallas\nComputer Science, Class of Dec 2027",
-      "raw_html": "",
-      "resume_path": "./src/resumes/fullstack.pdf",
-      "resume_type": "Fullstack"
-    },
-    "jobs@micro.ai": {
-      "to": "jobs@micro.ai",
-      "subject": "Internship Inquiry: Edge AI & Solutions Interest - Preston Rank",
-      "body": "Hi MicroAI Team,\n\nMy name is Preston Rank, and I'm a Computer Science junior at the University of Texas at Dallas, graduating in December 2027. I'm reaching out to inquire about potential internship opportunities for upcoming semesters.\n\nI've been genuinely impressed by MicroAI's innovative approach to intelligent asset management through edge-native AI for sectors like manufacturing and automotive. My academic background, coupled with my \"Solutions\" focused experience, has equipped me with a practical understanding of developing and implementing impactful AI applications. I'm particularly interested in contributing to real-world challenges in this space and believe my skills could be a great fit for your team.\n\nI've attached my resume for your review and would appreciate the opportunity to discuss how I can contribute to MicroAI's mission.\n\nThank you for your time and consideration.\n\nBest regards,\n\nPreston Rank",
-      "raw_html": "",
-      "resume_path": "./src/resumes/solutions_engineer.pdf",
-      "resume_type": "Solutions"
     }
   },
   "queued": {}

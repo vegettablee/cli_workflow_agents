@@ -32,15 +32,16 @@ def main():
     console.print("  • send_emails - Send personalized cold emails")
     console.print("  • clean_raw_data - Clean and validate data.json")
     console.print("  • clear_database - Clear all data from the database")
+    console.print("  • clear_session - Clear all data from email_session.json")
     console.print("  • help - Show available commands")
     console.print("  • exit - Exit the shell\n")
 
+    # Authenticate Gmail service before initializing anything else
+    gmail_service = authenticate_gmail()
+
     # Initialize prompt session and command handler
     session = PromptSession()
-    handler = CommandHandler()
-
-
-    gmail_service = authenticate_gmail()
+    handler = CommandHandler(gmail_service)
 
     # REPL Loop
     while True:

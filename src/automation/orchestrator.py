@@ -48,11 +48,16 @@ class OrchestrationLayer:
   Everything from this pulls directly from the 
   """
 
-  def __init__(self):
+  def __init__(self, email_service: Any):
     """
-    Initialize the orchestration layer.
+    Initialize the orchestration layer with authenticated Gmail service.
+
+    Args:
+        email_service: Authenticated Gmail API service object
     """
     self.session = SessionState()
+    self.session.add_gmail_service(email_service)
+
     self.agents = AgentManager() 
     # TODO later: 
     # read config.json for rate-limiting capabilities 

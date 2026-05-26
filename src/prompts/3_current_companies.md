@@ -1,29 +1,3 @@
-High-Growth Startups & Scale-Ups (Seed - Series D)
-
-LineLeader by ChildcareCRM | https://www.lineleader.com
-
-Care Continuity | https://www.carecontinuity.com
-
-PoobahAI | https://www.poobah.ai
-
-MythWorx | https://www.mythworx.ai
-
-FelixHealthcare.AI | https://www.felixhealthcare.ai
-
-Synapse Health | https://www.synapsehealth.com
-
-RollKall Technologies | https://www.rollkall.com
-
-Predactica | https://www.predactica.com
-
-KaiNexus | https://www.kainexus.com
-
-KeepTrax | https://www.keeptraxinc.com
-
-MobiCommerce | https://www.mobicommerce.net
-
-WashMetrix | https://www.washmetrix.com
-
 Established & Mid-Size Tech Companies
 
 Trend Micro | https://www.trendmicro.com

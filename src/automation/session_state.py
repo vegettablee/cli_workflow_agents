@@ -55,7 +55,17 @@ class SessionState:
         self.drafts: Dict[str, Dict[str, Any]] = {}
         self.review: Dict[str, Dict[str, Any]] = {}
         self.queued: Dict[str, Dict[str, Any]] = {}
+        self.email_service: Any = None
         self._load_from_cache()
+
+    def add_gmail_service(self, gmail_service: Any) -> None:
+        """
+        Store the authenticated Gmail service for persistence across the app.
+
+        Args:
+            gmail_service: Authenticated Gmail API service object from authenticate_gmail()
+        """
+        self.email_service = gmail_service 
 
     def _load_from_cache(self):
         """Load session state from cache file if it exists."""

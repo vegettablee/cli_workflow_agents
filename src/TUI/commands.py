@@ -3,6 +3,7 @@
 
 import sys
 import os
+import json
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -16,14 +17,15 @@ from db.connection import get_session
 console = Console()
 
 class CommandHandler:
-    def __init__(self):
-        self.orchestrator = OrchestrationLayer()
+    def __init__(self, email_service):
+        self.orchestrator = OrchestrationLayer(email_service)
         self.commands = {
             "stats": self.show_stats,
             "find_emails": self.find_emails,
             "send_emails": self.send_emails,
             "clean_raw_data": self.clean_raw_data,
             "clear_database": self.clear_database,
+            "clear_session": self.clear_email_session,
             "create_drafts": self.create_drafts,
             "review_drafts": self.review_drafts,
             "queue_reviewed_emails": self.queue_reviewed_emails,
@@ -169,6 +171,38 @@ class CommandHandler:
 
         except Exception as e:
             console.print(f"[red]Unexpected error: {e}[/red]\n")
+    def clear_email_session(self, args):
+        """Clear all data from email_session.json."""
+        console.print("[cyan]Clearing email session...[/cyan]\n")
+
+        # Get path to MCPServer root directory
+        current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        session_path = os.path.join(current_dir, "email_session.json")
+
+        # Read current session to count what will be cleared
+        with open(session_path, 'r') as f:
+            session_data = json.load(f)
+
+        drafts_count = len(session_data.get("drafts", {}))
+        review_count = len(session_data.get("review", {}))
+        queued_count = len(session_data.get("queued", {}))
+
+        # Clear the session
+        cleared_session = {
+            "drafts": {},
+            "review": {},
+            "queued": {}
+        }
+
+        with open(session_path, 'w') as f:
+            json.dump(cleared_session, f, indent=2)
+
+        console.print("[bold]Email Session Cleared Successfully:[/bold]")
+        console.print(f"  Drafts cleared: {drafts_count}")
+        console.print(f"  Review cleared: {review_count}")
+        console.print(f"  Queued cleared: {queued_count}\n")
+        console.print("[green]Email session is now empty![/green]\n") 
+
 
     def show_help(self, args):
         """Show available commands and usage."""
@@ -194,6 +228,8 @@ class CommandHandler:
         console.print("  Clean and validate data.json before insertion\n")
         console.print("[green]clear_database[/green]")
         console.print("  Clear all data from the database (requires confirmation)\n")
+        console.print("[green]clear_session[/green]")
+        console.print("  Clear all data from email_session.json (drafts, review, queued)\n")
         console.print("[green]help[/green]")
         console.print("  Show this help message\n")
         console.print("[green]exit[/green]")
