@@ -16,8 +16,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from typing import Dict, List, Tuple
 from db.connection import get_session
 from db.queries import find_valid_emails, get_company, get_recruiter, get_recruiter_email
-from src.automation.agents.email_personalization import run_draft_agent
-from src.automation.agents.resume_selection import run_resume_selection_agent
+from src.automation.agents.email.email_personalization import run_draft_agent
+from src.automation.agents.email.resume_selection import run_resume_selection_agent
 
 
 class DraftEmailWorkflow:

@@ -11,6 +11,7 @@ from rich.console import Console
 from src.services.data_pipeline import run_clean_and_insert_with_display
 from src.services.stats import get_stats
 from src.automation.orchestrator import OrchestrationLayer
+from src.scraper.entry_display import open_scraper_display
 from db.service import clear_database
 from db.connection import get_session
 
@@ -30,6 +31,7 @@ class CommandHandler:
             "review_drafts": self.review_drafts,
             "queue_reviewed_emails": self.queue_reviewed_emails,
             "help": self.show_help,
+            "open_scraper": self.open_scraper,
         }
 
     def parse(self, user_input):
@@ -204,6 +206,10 @@ class CommandHandler:
         console.print("[green]Email session is now empty![/green]\n") 
 
 
+    def open_scraper(self, args):
+        """Launch the clothing scraper — displays config for review then starts session."""
+        open_scraper_display()
+
     def show_help(self, args):
         """Show available commands and usage."""
         console.print("\n[bold cyan]Available Commands:[/bold cyan]\n")
@@ -230,6 +236,10 @@ class CommandHandler:
         console.print("  Clear all data from the database (requires confirmation)\n")
         console.print("[green]clear_session[/green]")
         console.print("  Clear all data from email_session.json (drafts, review, queued)\n")
+        console.print("[green]open_scraper[/green]")
+        console.print("  Launch the clothing scraper tool\n")
+        console.print("[green]clear[/green]")
+        console.print("  Clear the terminal screen\n")
         console.print("[green]help[/green]")
         console.print("  Show this help message\n")
         console.print("[green]exit[/green]")

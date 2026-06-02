@@ -33,6 +33,8 @@ def main():
     console.print("  • clean_raw_data - Clean and validate data.json")
     console.print("  • clear_database - Clear all data from the database")
     console.print("  • clear_session - Clear all data from email_session.json")
+    console.print("  • open_scraper - Launch the clothing scraper tool")
+    console.print("  • clear - Clear the terminal screen")
     console.print("  • help - Show available commands")
     console.print("  • exit - Exit the shell\n")
 
@@ -57,6 +59,11 @@ def main():
             if user_input.strip().lower() in ["exit", "quit"]:
                 console.print("[yellow]Goodbye![/yellow]")
                 break
+
+            # Clear screen
+            if user_input.strip().lower() == "clear":
+                console.clear()
+                continue
 
             # Execute command
             handler.execute(user_input)

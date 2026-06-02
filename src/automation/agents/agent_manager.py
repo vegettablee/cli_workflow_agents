@@ -1,6 +1,6 @@
 from pydantic_ai import Agent
 from pydantic_ai.models.gemini import GeminiModel
-from .pydantic_models import ResumeSelection, EmailDraft
+from .email.pydantic_models import ResumeSelection, EmailDraft
 
 
 class AgentManager:
@@ -44,3 +44,39 @@ class AgentManager:
                 tools=[]
             )
         return self._db_query_agent
+
+
+
+    #######******* SCRAPER AGENTS *******#######
+
+    @property # decides final verdict too
+    def scraper_orchestrator_agent(self): 
+        if self._db_query_agent is None:
+            self._db_query_agent = Agent(
+                model=self.model,
+                system_prompt='',
+                tools=[] # provide function calls to fire sub-agents
+            )
+        return self._db_query_agent
+        
+    @property 
+    def ebay_agent(self): 
+        if self._db_query_agent is None:
+            self._db_query_agent = Agent(
+                model=self.model,
+                system_prompt='',
+                tools=[]
+            )
+        return self._db_query_agent
+
+    #### TODO: LATER, FOCUS ON EBAY AGENT FOR WORKING MVP
+    @property 
+    def grailed_agent(self): 
+        if self._db_query_agent is None:
+            self._db_query_agent = Agent(
+                model=self.model,
+                system_prompt='',
+                tools=[]
+            )
+        return self._db_query_agent
+    

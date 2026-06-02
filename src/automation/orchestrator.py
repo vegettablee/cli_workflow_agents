@@ -23,10 +23,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from enum import Enum
 from typing import Dict, List, Any
-from src.automation.workflows.draft_email import DraftEmailWorkflow
+from src.automation.workflows.email.draft_email import DraftEmailWorkflow
 from src.automation.session_state import SessionState
 from src.automation.agents.agent_manager import AgentManager
-from src.automation.format_display import (
+from src.automation.workflows.email.format_display import (
     display_drafted_email,
     display_workflow_header,
     display_workflow_footer,
@@ -205,3 +205,27 @@ class OrchestrationLayer:
     Execute workflow to check for email replies and update database.
     """
     pass 
+
+    
+
+    ######****** SCRAPER WORKFLOWS *******######
+    
+    def start_scraper_workflow(self): 
+      # user presses start, adds preferences for number of agents, brands, per-hour limits, etc
+      # the scraping process is starting and is now loading for the user with real-time updates
+      # this is now called to initialize the agents and use the data inside of scraper_state.py to actually
+      # start the process, and fire off different sub-workflows(ebay sold research) to start gathering information.
+
+      # so: 
+      # get 1-3 new listings from TRR via httpx/chrome/cdp -> initialize orchestrator and ensure it initializes
+      # this is done by starting the get_listings_workflow() 
+
+      # the right sub-agents based on user config -> send sub-agents to research -> finalize results
+      # after x minutes -> orchestrator decides to ignore, watch, or notify immediately via iMessage. 
+
+      # this function is doing the main start scraper initialization and is essentially the main entry point for the scraper
+      # displayed by the dashboard in the terminal, but all of the other dashboard things like the anamolies, 
+      # general stats, refreshing data, this is all separately. when the dashboard updates info, it will
+      # do so through scraper_state.py, which session_state.py modifies/controls.
+          
+      pass

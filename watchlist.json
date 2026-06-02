@@ -1,0 +1,49 @@
+{
+  "global": {
+    "sub_agent_timeout_minutes": 10, 
+    "price_ceiling": null,
+    "condition": ["excellent", "good"],
+    "sources": {
+      "ebay": true,
+      "grailed": true,
+      "vestiaire": false,
+      "stockx": false
+    },
+    "categories": ["jacket", "t-shirt", "jeans", "sneaker"],
+    "size_definitions": {
+      "clothing": {
+        "S": ["XS", "S"],
+        "M": ["M"],
+        "L": ["L", "XL", "XXL"]
+      },
+      "shoes": {
+        "S": [1, 7],
+        "M": [8, 11],
+        "L": [12, 18]
+      },
+      "denim": {
+        "S": [28, 30],
+        "M": [31, 33],
+        "L": [34, 40]
+      }
+    },
+    "sizes": {
+      "clothing": ["M", "L"],
+      "denim": ["M"],
+      "shoes": ["M"]
+    },
+    "image": {
+      "classification_confidence_threshold": null,
+      "similarity_threshold": null,
+      "classifier_model": null,
+      "clip_model": null
+    }
+  },
+  "brands": [
+    { "name": "Undercover", "enabled": true },
+    { "name": "Issey Miyake", "enabled": true },
+    { "name": "Yohji Yamamoto", "enabled": true },
+    { "name": "Comme Des Garcons", "enabled": true },
+    { "name": "Vivienne Westwood", "enabled": true }
+  ]
+}
