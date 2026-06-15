@@ -24,6 +24,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from enum import Enum
 from typing import Dict, List, Any
 from src.automation.workflows.email.draft_email import DraftEmailWorkflow
+from src.automation.workflows.email.review_email import ReviewEmailWorkflow
 from src.automation.session_state import SessionState
 from src.automation.agents.agent_manager import AgentManager
 from src.automation.workflows.email.format_display import (
@@ -180,8 +181,8 @@ class OrchestrationLayer:
 
       display_workflow_footer("Draft Workflow", counter) 
   
-  def run_review_email_workflow(self): 
-    pass
+  def run_review_email_workflow(self, count: int):
+    ReviewEmailWorkflow.run(self.session, count)
   
   def run_queue_email_workflow(self):
     pass

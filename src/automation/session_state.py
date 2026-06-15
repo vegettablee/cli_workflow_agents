@@ -126,7 +126,15 @@ class SessionState:
         Returns:
             True if successfully removed, False otherwise
         """
-        pass
+        try:
+            if email not in self.drafts:
+                print(f"Error: Email '{email}' not found in drafts")
+                return False
+            del self.drafts[email]
+            return True
+        except Exception as e:
+            print(f"Error removing draft: {str(e)}")
+            return False
 
     @auto_save
     def move_to_review(self, email: str) -> bool:
@@ -163,7 +171,38 @@ class SessionState:
         Returns:
             True if successfully moved, False otherwise
         """
-        pass
+        try:
+            if email not in self.review:
+                print(f"Error: Email '{email}' not found in review")
+                return False
+            self.queued[email] = self.review[email]
+            del self.review[email]
+            return True
+        except Exception as e:
+            print(f"Error moving to queue: {str(e)}")
+            return False
+
+    @auto_save
+    def move_to_drafts(self, email: str) -> bool:
+        """
+        Move an email from review back to drafts for regeneration.
+
+        Args:
+            email: Email address key to move
+
+        Returns:
+            True if successfully moved, False otherwise
+        """
+        try:
+            if email not in self.review:
+                print(f"Error: Email '{email}' not found in review")
+                return False
+            self.drafts[email] = self.review[email]
+            del self.review[email]
+            return True
+        except Exception as e:
+            print(f"Error moving to drafts: {str(e)}")
+            return False
 
     @auto_save
     def clear_session(self):

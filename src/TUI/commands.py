@@ -29,7 +29,6 @@ class CommandHandler:
             "clear_session": self.clear_email_session,
             "create_drafts": self.create_drafts,
             "review_drafts": self.review_drafts,
-            "queue_reviewed_emails": self.queue_reviewed_emails,
             "help": self.show_help,
             "open_scraper": self.open_scraper,
         }
@@ -104,16 +103,12 @@ class CommandHandler:
         self.orchestrator.run_draft_email_workflow(count)
 
     def review_drafts(self, args):
-        """Review draft emails."""
+        """Review draft emails interactively."""
         count = args.get("count", 0)
-        console.print(f"[cyan]Fetching {count} drafts for review...[/cyan]")
-        # TODO: Call orchestrator.run_review_email_workflow(count)
-
-    def queue_reviewed_emails(self, args):
-        """Queue reviewed emails to be sent."""
-        count = args.get("count", 0)
-        console.print(f"[cyan]Queueing {count} reviewed emails...[/cyan]")
-        # TODO: Call orchestrator.run_queue_email_workflow(count)
+        if count == 0:
+            console.print("[red]Usage: review_drafts <count>[/red]")
+            return
+        self.orchestrator.run_review_email_workflow(count)
     
     def clean_raw_data(self, args):
         """Clean and validate data.json, then insert into database."""
@@ -219,11 +214,8 @@ class CommandHandler:
         console.print("  Create email drafts from database")
         console.print("  Example: create_drafts 5\n")
         console.print("[green]review_drafts <count>[/green]")
-        console.print("  Review draft emails")
+        console.print("  Review draft emails interactively — approve, reject, or skip")
         console.print("  Example: review_drafts 3\n")
-        console.print("[green]queue_reviewed_emails <count>[/green]")
-        console.print("  Queue reviewed emails to be sent")
-        console.print("  Example: queue_reviewed_emails 2\n")
         console.print("[green]find_emails[/green]")
         console.print("  Research companies and find recruiter emails")
         console.print("  Example: find_emails company=Stripe\n")
