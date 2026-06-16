@@ -15,6 +15,7 @@ venv
 *.db
 *.sqlite
 *.sqlite3
+*.html
 
 # IDE
 .vscode/
@@ -27,6 +28,9 @@ venv
 
 # Logs
 *.log
+
+CLAUDE.md
+.claude
 
 automation_agent.egg-info
 personal_docs
