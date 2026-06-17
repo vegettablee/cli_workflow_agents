@@ -1,0 +1,22 @@
+{
+  "default": {
+    "json_ld": {
+      "script_type": "application/ld+json",
+      "listings_path": ["mainEntity", "itemListElement"],
+      "fields": {
+        "name": "name",
+        "listing_url": "url",
+        "image_url": "image"
+      }
+    },
+    "dom": {
+      "card_testid": "^plp-product/\\d+$",
+      "fields": {
+        "size": "-size",
+        "price_original": "-price-original",
+        "price_final": "-price-final",
+        "price_callout": "-price-callout"
+      }
+    }
+  }
+}

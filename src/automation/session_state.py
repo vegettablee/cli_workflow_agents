@@ -55,6 +55,7 @@ class SessionState:
         self.drafts: Dict[str, Dict[str, Any]] = {}
         self.review: Dict[str, Dict[str, Any]] = {}
         self.queued: Dict[str, Dict[str, Any]] = {}
+        self.scraper_ready : bool, # if chrome is connected to TRR
         self.email_service: Any = None
         self._load_from_cache()
 

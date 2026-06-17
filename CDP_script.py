@@ -17,38 +17,62 @@ import asyncio
 from datetime import date
 from pathlib import Path
 
-from patchright.async_api import async_playwright
+from patchright.async_api import async_playwright, Browser
 
 from src.scraper.url_builder.builder import catalog_url
 
 CATALOG_DIR = Path("db/html/catalog")
+CDP_URL = "http://localhost:9222"
 
 
-async def download_catalog(brand: str) -> Path:
-    async with async_playwright() as p:
-        print("[*] Connecting to Chrome on port 9222...")
-        browser = await p.chromium.connect_over_cdp("http://localhost:9222")
+async def connect() -> Browser | None:
+    try:
+        p = await async_playwright().start()
+        browser = await p.chromium.connect_over_cdp(CDP_URL)
+        print(f"[*] Connected to Chrome on {CDP_URL}")
+        return browser
+    except Exception as e:
+        print(f"[error] Could not connect to Chrome: {e}")
+        return None
 
-        context = browser.contexts[0]
-        page = context.pages[0] if context.pages else await context.new_page()
 
-        url = catalog_url(brand)
-        print(f"[*] Navigating to: {url}")
-        await page.goto(url)
-        # await page.wait_for_load_state("networkidle")
-        await asyncio.sleep(3)
-
-        html = await page.content()
-
-        today = date.today().strftime("%Y-%m-%d")
-        filename = CATALOG_DIR / f"{brand.replace(' ', '_')}_{today}.html"
-        filename.write_text(html, encoding="utf-8")
-
-        print(f"[+] Saved {len(html):,} bytes -> {filename}")
+async def is_connected() -> bool:
+    try:
+        p = await async_playwright().start()
+        browser = await p.chromium.connect_over_cdp(CDP_URL)
         await browser.close()
-        return filename
+        return True
+    except Exception:
+        return False
+
+
+async def fetch_html(url: str, browser: Browser) -> Path | None:
+    context = browser.contexts[0]
+    page = context.pages[0] if context.pages else await context.new_page()
+
+    print(f"[*] Navigating to: {url}")
+    await page.goto(url)
+    await asyncio.sleep(3)
+
+    html = await page.content()
+
+    today = date.today().strftime("%Y-%m-%d")
+    filename = CATALOG_DIR / f"{brand.replace(' ', '_')}_{today}.html"
+    filename.write_text(html, encoding="utf-8")
+
+    print(f"[+] Saved {len(html):,} bytes -> {filename}")
+    return filename
+
+
+async def main():
+    browser = await connect()
+    if not browser:
+        return
+
+    brand = input("Brand (e.g. undercover): ").strip().lower()
+    await fetch_catalog(brand, browser)
+    await browser.close()
 
 
 if __name__ == "__main__":
-    brand = input("Brand (e.g. undercover): ").strip().lower()
-    asyncio.run(download_catalog(brand))
+    asyncio.run(main())
