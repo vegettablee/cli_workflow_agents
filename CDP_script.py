@@ -14,14 +14,9 @@ Dependencies:
 """
 
 import asyncio
-from datetime import date
-from pathlib import Path
 
 from patchright.async_api import async_playwright, Browser
 
-from src.scraper.url_builder.builder import catalog_url
-
-CATALOG_DIR = Path("db/html/catalog")
 CDP_URL = "http://localhost:9222"
 
 
@@ -46,7 +41,8 @@ async def is_connected() -> bool:
         return False
 
 
-async def fetch_html(url: str, browser: Browser) -> Path | None:
+async def fetch_html(url: str, browser: Browser) -> str:
+    """Navigate to url in the existing browser context and return rendered HTML."""
     context = browser.contexts[0]
     page = context.pages[0] if context.pages else await context.new_page()
 
@@ -55,23 +51,25 @@ async def fetch_html(url: str, browser: Browser) -> Path | None:
     await asyncio.sleep(3)
 
     html = await page.content()
-
-    today = date.today().strftime("%Y-%m-%d")
-    filename = CATALOG_DIR / f"{brand.replace(' ', '_')}_{today}.html"
-    filename.write_text(html, encoding="utf-8")
-
-    print(f"[+] Saved {len(html):,} bytes -> {filename}")
-    return filename
+    print(f"[+] Fetched {len(html):,} bytes")
+    return html
 
 
 async def main():
     browser = await connect()
     if not browser:
+        print("[-] Not connected.")
         return
+    print("[+] Connected. Keeping session alive (Ctrl+C to exit).")
 
-    brand = input("Brand (e.g. undercover): ").strip().lower()
-    await fetch_catalog(brand, browser)
-    await browser.close()
+    disconnected = asyncio.Event()
+    browser.on("disconnected", lambda _=None: disconnected.set())
+
+    try:
+        await disconnected.wait()
+        print("[-] Browser disconnected.")
+    except Exception as e:
+        print(f"[error] {e}")
 
 
 if __name__ == "__main__":

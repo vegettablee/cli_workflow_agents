@@ -1,7 +1,18 @@
 import json
 import re
+import sys
+import uuid
+from datetime import date
 from pathlib import Path
 from bs4 import BeautifulSoup
+
+# repo root added so CDP_script.py (at root) is importable from here
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from CDP_script import connect, fetch_html
+from src.scraper.url_builder.builder import catalog_url as build_catalog_url
 
 class HTMLTools:
     def __init__(self, brand: str):
@@ -32,21 +43,24 @@ class HTMLTools:
     def load_html(self, html_path: str):
         self.soup = BeautifulSoup(Path(html_path).read_text(encoding="utf-8"), "lxml")
 
-    def generate_catalog_html(self, brand: str) -> str:
-        catalog_url = catalog_url(brand) 
-        # helper function to navigate to the url using CDP patchright
+    async def generate_catalog_html(self, brand: str) -> str:
+        url = build_catalog_url(brand)
         browser = await connect()
         if not browser:
-          return
-        successful = await fetch_html(catalog_url, browser)
-        await browser.close()
+            raise RuntimeError("Could not connect to Chrome (port 9222).")
+        try:
+            html = await fetch_html(url, browser)
+        finally:
+            await browser.close()
 
-        if successful:   
-          batch_id = uuid() 
-          return batch_id
-        # gets url from src/scraper/url_builder function
-        # navigates to CDP patchright and downloads to directory
-        # returns the batch_id that was used to insert the file
+        batch_id = uuid.uuid4().hex[:5]
+        date_str = date.today().strftime("%m%d%y")
+        out_dir = _REPO_ROOT / "db" / "html" / "catalog" / brand
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_path = out_dir / f"{date_str}_{batch_id}.html"
+        out_path.write_text(html, encoding="utf-8")
+        print(f"[+] Saved {len(html):,} bytes -> {out_path}")
+        return batch_id
 
     def check_catalog_html(self, brand: str, batch_id: str) -> bool:
         catalog_dir = Path(__file__).parent.parent.parent.parent / "db" / "html" / "catalog" / brand
@@ -54,9 +68,46 @@ class HTMLTools:
             return False
         return any(f.stem.endswith(f"_{batch_id}") for f in catalog_dir.iterdir())
 
-     def clean_catalog_html(self, brand: str, batch_id: str) -> list:
-        # parse html and return listings
-        pass
+    def get_catalog_html_path(self, brand: str, batch_id: str) -> Path | None:
+        catalog_dir = Path(__file__).parent.parent.parent.parent / "db" / "html" / "catalog" / brand
+        if not catalog_dir.exists():
+            return None
+        return next((f for f in catalog_dir.iterdir() if f.stem.endswith(f"_{batch_id}")), None)
+
+    def clean_catalog_html(self, brand: str, batch_id: str) -> list:
+        """Parse the saved catalog HTML for this brand+batch_id into a list of listing dicts."""
+        path = self.get_catalog_html_path(brand, batch_id)
+        if path is None:
+            raise FileNotFoundError(f"No catalog HTML for {brand}/{batch_id}")
+        self.load_html(str(path))
+
+        cfg = self.config
+        json_ld_cfg = cfg["json_ld"]
+        raw = self.get_json_ld_fields(json_ld_cfg["listings_path"]) or []
+        field_map = json_ld_cfg.get("fields", {})
+
+        card_pattern = re.compile(cfg["dom"]["card_testid"])
+        cards = self.soup.find_all("div", {"data-testid": card_pattern})
+
+        # config field name -> output dict key (everything else maps 1:1)
+        key_alias = {"price_original": "price", "price_final": "final_price"}
+
+        listings = []
+        for i, card in enumerate(cards):
+            meta = raw[i] if i < len(raw) else {}
+            row = {
+                "name": meta.get(field_map.get("name", "name")),
+                "brand": brand,
+                "listing_url": meta.get(field_map.get("listing_url", "url")),
+                "image_url": meta.get(field_map.get("image_url", "image")),
+            }
+            for cfg_field, testid_suffix in cfg["dom"].get("fields", {}).items():
+                el = card.find(attrs={"data-testid": re.compile(testid_suffix + "$")})
+                value = el.get_text(strip=True) if el else None
+                row[key_alias.get(cfg_field, cfg_field)] = value
+            listings.append(row)
+
+        return listings
 
     ## AGENT TOOLS GO PAST HERE ##
 
