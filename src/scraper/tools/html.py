@@ -128,30 +128,42 @@ class HTMLTools:
                 return None
         return data
 
-    def get_card_testids(self) -> list[str]:
-        card = self.soup.find("div", {"data-testid": re.compile(r"^plp-product/\d+$")})
-        if not card:
+    def get_card_testids(self, card_limit: int = 10, limit: int = 10) -> list[str]:
+        cards = self.soup.find_all("div", {"data-testid": re.compile(r"^plp-product/\d+$")})
+        if not cards:
             return []
-        return list({
-            el["data-testid"]
-            for el in card.find_all(attrs={"data-testid": True})
-        })
+        seen: list[str] = []
+        for card in cards[:card_limit]:
+            for el in card.find_all(attrs={"data-testid": True}):
+                tid = el["data-testid"]
+                if tid not in seen:
+                    seen.append(tid)
+                    if len(seen) >= limit:
+                        return seen
+        return seen
 
-    def get_element_context(self, testid_suffix: str, chars: int = 20, limit: int = 3) -> list[str]:
-        card = self.soup.find("div", {"data-testid": re.compile(r"^plp-product/\d+$")})
-        if not card:
+    def get_element_context(
+        self,
+        testid_suffix: str,
+        chars: int = 40,
+        card_limit: int = 10,
+        limit: int = 10,
+    ) -> list[str]:
+        cards = self.soup.find_all("div", {"data-testid": re.compile(r"^plp-product/\d+$")})
+        if not cards:
             return []
 
-        card_html = str(card)
         pattern = re.compile(r'data-testid="[^"]*' + re.escape(testid_suffix) + r'"')
-        results = []
+        results: list[str] = []
 
-        for match in pattern.finditer(card_html):
-            start = max(0, match.start() - chars)
-            end = min(len(card_html), match.end() + chars)
-            results.append(card_html[start:end])
-            if len(results) >= limit:
-                break
+        for card in cards[:card_limit]:
+            card_html = str(card)
+            for match in pattern.finditer(card_html):
+                start = max(0, match.start() - chars)
+                end = min(len(card_html), match.end() + chars)
+                results.append(card_html[start:end])
+                if len(results) >= limit:
+                    return results
 
         return results
 
