@@ -1,42 +1,10 @@
 # Your role as an agent 
 - You are to act as a collaborator who asks clarifying and thought-provoking questions, and does not build with assumptions apart from low-level implementation details that are non-trivial. IF at any point, you are confused on how to implement, stop and ask me directly. 
 
+# Reference Materials 
+- Before generating, modifying, or validating any system prompt / agent prompt / LLM-facing instruction, read `prompt_engineering/CLAUDE.md` and apply the best practices documented there. This applies to new agents, heal/classify prompts, tool descriptions consumed by LLMs, and any prompt revisions.
+
 # System Overview for Personalized Cold-Email Internship Automation Tool 
-
-Functional requirements: 
-1. Must be able to send a personalized email given: 
-- - personal information(name, school, year, major, expected graduation date)
-- - experience/background info specific to the role 
-- - email address 
-- - resume file
-2. Keep track of emails that are:
-- - sent 
-- - replied 
-3. Extrapolate company info in the context of how I can contribute as an intern
-- - separate into roles(backend, fullstack, data engineer, solutions engineer, ai engineer)
-- - store company info as a context resource when sending cold emails
-4. Multiple resumes based on their framing
-- - backend, fullstack, data engineer, solutions engineer, ai engineer, mobile
-
-
-Non-Functional requirements: 
-1. Personalized emails can be framed based on different categories of roles.
-2. Send follow up emails after x amount of days. 
-3. Follow up email for normal internship application status updates.
-4. Rate limiting for scraping company websites and sending emails(maybe like 20 every hour). 
-5. Separate tool for tailoring resumes. 
-
-Workflows required: 
-- Company info research to gather useful information 
-- Personalized email creator/sender 
---- Separating into two different workflows makes it easier when I need to focus on getting more leads to cold-email, and another one purely for how I want to personalize the email. So they can potentially run in parallel too.
-
-Company-info Research Workflow: 
-1. Agent scrapes company info, looks for:
-- type of company(startup, mid-size, etc)
-- open/past tech roles that match relevant experience 
-- potential recruiter emails and/or linkedin profile links 
-2. Insert relevant company info into SQL. 
 
 Personalized Automation Email Generation Workflow: 
 1. Pings the SQLite database for any emails that have not been sent yet. 
@@ -44,7 +12,6 @@ Personalized Automation Email Generation Workflow:
 3. For each email in the queue, use company and personal info to draft a personalized email. 
 4. Find most relevant resume and attach to the email.
 5. Email gets sent to the recruiter/company.
-
 
 Tech Stack: 
 - SQLite
@@ -79,8 +46,7 @@ Orchestration Layer: Acts as an entry point to workflow requests and manages all
 Boundaries:
   ├─ Gmail API Layer: only knows Google API structure 
   ├─ Service Layer: only knows the Gmail API request functions  
-  ├─ Orchestration Layer: only knows which workflows can be used and when to use them, within this layer includes /agent and /workflows     which directly interact with the service layer when needed to complete higher functionality 
-
+  ├─ Orchestration Layer: only knows which workflows can be used and when to use them, within this layer includes /agent and /workflows which directly interact with the service layer when needed to complete higher functionality 
 
 Data that crosses boudaries: 
 - Orchestration -> Service: Workflow coordinates agents for the task completion, and the agent passes the name of the tool/function to be used(check email, create email, send email) to the service layer

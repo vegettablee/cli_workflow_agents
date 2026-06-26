@@ -48,7 +48,7 @@ async def fetch_html(url: str, browser: Browser) -> str:
 
     print(f"[*] Navigating to: {url}")
     await page.goto(url)
-    await asyncio.sleep(3)
+    await asyncio.sleep(15)
 
     html = await page.content()
     print(f"[+] Fetched {len(html):,} bytes")
